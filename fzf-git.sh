@@ -70,7 +70,7 @@ if [[ $1 = --list ]]; then
     }
     case "$1" in
       branches)
-        echo 'CTRL-O (open in browser) ╱ ALT-A (show all branches)'
+        echo 'CTRL-O (open in browser) ╱ ALT-R (show all branches)'
         echo 'ALT-H (list commit hashes)'
         branches
         ;;
@@ -81,7 +81,7 @@ if [[ $1 = --list ]]; then
         ;;
       hashes)
         echo 'CTRL-O (open in browser) ╱ CTRL-D (diff)'
-        echo 'CTRL-S (toggle sort) ╱ ALT-A (show all hashes)'
+        echo 'CTRL-S (toggle sort) ╱ ALT-R (show all hashes)'
         hashes
         ;;
       all-hashes)
@@ -90,7 +90,7 @@ if [[ $1 = --list ]]; then
         hashes --all
         ;;
       refs)
-        echo 'CTRL-O (open in browser) ╱ ALT-E (examine in editor) ╱ ALT-A (show all refs)'
+        echo 'CTRL-O (open in browser) ╱ ALT-E (examine in editor) ╱ ALT-R (show all refs)'
         refs --exclude='refs/remotes'
         ;;
       all-refs)
@@ -200,7 +200,7 @@ _fzf_git_branches() {
     --no-hscroll \
     --bind 'ctrl-/:change-preview-window(down,70%|hidden|)' \
     --bind "ctrl-o:execute-silent:bash \"$__fzf_git\" --list branch {}" \
-    --bind "alt-a:change-border-label(🌳 All branches)+reload:bash \"$__fzf_git\" --list all-branches" \
+    --bind "alt-r:change-border-label(🌳 All branches)+reload:bash \"$__fzf_git\" --list all-branches" \
     --bind "alt-h:become:LIST_OPTS=\$(cut -c3- <<< {} | cut -d' ' -f1) bash \"$__fzf_git\" --run hashes" \
     --bind "alt-enter:become:printf '%s\n' {+} | cut -c3- | sed 's@[^/]*/@@'" \
     --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:%C(auto)%cd %h%d %s' \$(cut -c3- <<< {} | cut -d' ' -f1) --" "$@" |
@@ -225,7 +225,7 @@ _fzf_git_hashes() {
     --header-lines 2 \
     --bind "ctrl-o:execute-silent:bash \"$__fzf_git\" --list commit {}" \
     --bind "ctrl-d:execute:grep -o '[a-f0-9]\{7,\}' <<< {} | head -n 1 | xargs git diff --color=$(__fzf_git_color) > /dev/tty" \
-    --bind "alt-a:change-border-label(🍇 All hashes)+reload:bash \"$__fzf_git\" --list all-hashes" \
+    --bind "alt-r:change-border-label(🍇 All hashes)+reload:bash \"$__fzf_git\" --list all-hashes" \
     --color hl:underline,hl+:underline \
     --preview "grep -o '[a-f0-9]\{7,\}' <<< {} | head -n 1 | xargs git show --color=$(__fzf_git_color .) | $(__fzf_git_pager)" "$@" |
   awk 'match($0, /[a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9][a-f0-9]*/) { print substr($0, RSTART, RLENGTH) }'
@@ -274,7 +274,7 @@ _fzf_git_each_ref() {
     --bind 'ctrl-/:change-preview-window(down,70%|hidden|)' \
     --bind "ctrl-o:execute-silent:bash \"$__fzf_git\" --list {1} {2}" \
     --bind "alt-e:execute:${EDITOR:-vim} <(git show {2}) > /dev/tty" \
-    --bind "alt-a:change-border-label(🍀 Every ref)+reload:bash \"$__fzf_git\" --list all-refs" \
+    --bind "alt-r:change-border-label(🍀 Every ref)+reload:bash \"$__fzf_git\" --list all-refs" \
     --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:%C(auto)%cd %h%d %s' {2} --" "$@" |
   awk '{print $2}'
 }
